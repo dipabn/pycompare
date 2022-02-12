@@ -1,0 +1,58 @@
+import numpy as np
+import pandas as pd
+import os
+import re
+
+#loading mapping data
+mapping_data1=pd.read_excel('file1.xlsx', 'worksheetname1', header=1, usecols=["A,"B","C"])
+mapping_data2=pd.read_excel('file1.xlsx', 'worksheetname2', header=1, usecols=["A,"B","C"])
+mapping_data3=pd.read_excel('file1.xlsx', 'worksheetname3', header=1, usecols=["A,"B","C"])
+
+#appending column names from 3 worksheets into one file
+
+frames=[mapping_data1,mapping_dat2,mapping_data3]
+maping_data_onlycol=pd.concat(frames).reset_index()
+mapping_data_onlycol["A"]=mapping_data_onlycol["A"].str.strip()
+mapping_data_onlycol.to_excel("Append_data.xlsx")
+
+#loading and renaming SAS ID data to PC columns
+sas_id_file=pd.read.csv('file2.csv', sep=",",header=0,dtype='unicode')
+sas_id_file.replace(to_replace=np.nan,value="",nplace=True)
+sas_id_file.columns=sas_id_file.columns.str.upper()
+
+r=list(mapping_data_onlycol['B']
+renamed_col=[]
+only_matched_col=[]
+work_list=[]
+for i in sas_id_file.columns:
+  if i.strip() in r:
+  a=str(list(mapping_data_onlycol['B'].where(mapping_data_onlycol['A]==i.strip()).dropna().unique())[0])
+  renamed_col.append(a)
+  work_list.append(a)
+  
+  else:
+  work_list.append(i)
+  not_matched_col.append(i)
+
+a_work.columns=work_list
+a_file_renamed=id_file[renamed_col]
+a_file_renamed.to_csv('C:\desktop')
+#print(file.head(1))
+#print(not_matched_col)
+
+
+#loading 2nd file of different headers
+pc_file=pd.read_csv('test.csv',sep=",",header=0,dtype='unicode')
+pc_file.replace(to_replace=np.nan, value="",inplace=True)
+pc_column=pc_file.columns
+#removing array column from files as they cant be compared
+arrya_col=[i for i in renamed_col if i in pc_column]
+final_match_col_list=[i for i in renamed_col if i in pc_column]
+pc_file=pc_file[final_match_col_list]
+pc_file=pc_file.add_suffix('PC')
+#keeping col matching with PC
+sas_id_file_renamed=sas_id_file_renamed[Final_match_col_list]
+sas_id_file_renamed=sas_id_file_renamed.add_suffix('SASID')
+
+#creating master file by merging sas id file and pc file
+master_file
